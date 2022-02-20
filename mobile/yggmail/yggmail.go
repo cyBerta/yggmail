@@ -41,6 +41,8 @@ const (
 	Error
 )
 
+const MAX_MESSAGE_BYTES = 25 * 1024 * 1024
+
 type Yggmail struct {
 	storage           *sqlite3.SQLite3Storage
 	imapServer        *imapserver.IMAPServer
@@ -228,7 +230,7 @@ func (ym *Yggmail) start(smtpaddr string, imapaddr string, multicast bool, peers
 	ym.localSmtpServer = smtp.NewServer(localBackend)
 	ym.localSmtpServer.Addr = smtpaddr
 	ym.localSmtpServer.Domain = hex.EncodeToString(pk)
-	ym.localSmtpServer.MaxMessageBytes = 1024 * 1024
+	ym.localSmtpServer.MaxMessageBytes = MAX_MESSAGE_BYTES
 	ym.localSmtpServer.MaxRecipients = 50
 	ym.localSmtpServer.AllowInsecureAuth = true
 
@@ -243,7 +245,7 @@ func (ym *Yggmail) start(smtpaddr string, imapaddr string, multicast bool, peers
 
 	ym.overlaySmtpServer = smtp.NewServer(overlayBackend)
 	ym.overlaySmtpServer.Domain = hex.EncodeToString(pk)
-	ym.overlaySmtpServer.MaxMessageBytes = 1024 * 1024
+	ym.overlaySmtpServer.MaxMessageBytes = MAX_MESSAGE_BYTES
 	ym.overlaySmtpServer.MaxRecipients = 50
 	ym.overlaySmtpServer.AuthDisabled = true
 
